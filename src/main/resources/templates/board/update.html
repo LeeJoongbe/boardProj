@@ -67,14 +67,49 @@
                     </div>
 
                     <div class="row">
-                        <div class="col">
-                            <div class="input-group mb-3">
+                        <div class="col aa">
+                            <div class="input-group mb-3 ">
                                 <label class="input-group-text" for="inputGroupFile01">사진등록할꺼임</label>
-                                <input type="file" name="multipartFile" class="form-control" id="inputGroupFile01">
+                                <input type="file" name="multipartFile" class="form-control imgpreviewinput" id="inputGroupFile01">
                             </div>
                         </div>
 
                     </div>
+
+
+                    <script>
+                        $(".imgpreviewinput").on("change", function () {
+                            readURL(this)
+                        })
+                        $(".aa").on("click", "button", function () {
+                            $(".imgpreviewinput").val("")
+                            $(this).parent().html("")
+                        })
+                        function readURL(input) {
+                            if (input.files && input.files[0]) {
+
+
+                                var reader = new FileReader();
+                                reader.onload = function(e) {
+                                    let inputtag = document.createElement("input")
+                                    inputtag.type = "file"
+                                    inputtag.name = "multipartFile"
+                                    inputtag.files = input.files
+                                    let str = `<div class="preview">
+                                                <img src="${e.target.result}">
+                                                <button type='button' class='bb'>올리지 않기</button>
+                                                </div>`
+                                    $(".aa").append(str)
+                                    document.querySelector(".aa").lastChild.appendChild(inputtag)
+                                    inputtag.style.display = 'none'
+
+                                    // document.getElementById('preview').src = e.target.result;
+                                    // document.querySelector(".aa").innerHTML = "<button type='button' class='bb'>올리지 않기</button>"
+                                };
+                                reader.readAsDataURL(input.files[0]);
+                            }
+                        }
+                    </script>
 
 
                     <div class="row mb-3 imgdiv">

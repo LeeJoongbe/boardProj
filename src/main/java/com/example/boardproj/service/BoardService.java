@@ -12,7 +12,7 @@ public interface BoardService {
     public void register(BoardDTO boardDTO);
 
     //사진을 추가한 등록
-    public void register(BoardDTO boardDTO, MultipartFile multipartFile);
+    public void register(BoardDTO boardDTO, MultipartFile[] multipartFile);
 
 
 
@@ -28,7 +28,7 @@ public interface BoardService {
     public PageResponseDTO<BoardDTO> pageListsearchdsl(PageRequestDTO pageRequestDTO);
 
     //수정
-    public void update(BoardDTO boardDTO);
+    public void update(BoardDTO boardDTO, MultipartFile[] multipartFiles , Long[] delino );
 
     //삭제
     public void del(Long bno);
