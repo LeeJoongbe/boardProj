@@ -18,7 +18,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -46,7 +45,7 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public void register(BoardDTO boardDTO, MultipartFile[] multipartFile) {
+    public void register(BoardDTO boardDTO, MultipartFile multipartFile) {
 
         log.info("등록 서비스 들어온값: "+boardDTO);
         log.info("등록 서비스 들어온값: "+multipartFile);
@@ -62,17 +61,8 @@ public class BoardServiceImpl implements BoardService{
         // 사진을 저장합니다. FileService 저장
         // 저장할때 필요한 내용은 multipartFile
 
-        if(multipartFile != null){
-            for(MultipartFile file  : multipartFile) {
-                if( !file.isEmpty()){
-
-                    log.info("사진이 저장됩니다.");
-                    boardImgService.boardImgregister(board.getBno(), file);
-
-                }
-            }
-
-
+        if(multipartFile != null && !multipartFile.isEmpty()){
+            boardImgService.boardImgregister(board.getBno(), multipartFile);
         }
 
 
@@ -213,7 +203,7 @@ public class BoardServiceImpl implements BoardService{
 
 
     @Override
-    public void update(BoardDTO boardDTO,  MultipartFile[] multipartFiles , Long[] delino ) {
+    public void update(BoardDTO boardDTO) {
         log.info("수정 서비스 들어온값 : " + boardDTO );
         //들어온값중에 수정할 데이터의 pk번호가 있다.
 
@@ -227,44 +217,6 @@ public class BoardServiceImpl implements BoardService{
 
         board.setTitle( boardDTO.getTitle()  );
         board.setContent( boardDTO.getContent() );
-
-        //파일 삭제
-        if(delino != null && !delino[0].equals("")){
-            log.info("업데이트포스 " + Arrays.toString(delino));
-            for (Long ino : delino) {
-                boardImgService.del(ino);
-            }
-        }
-
-        //파일등록
-
-
-            if(multipartFiles != null && multipartFiles.length > 0){
-
-                for(MultipartFile multipartFile : multipartFiles ){
-                    if(multipartFile != null){
-                        log.info(" 여기 사진이 있어요");
-                        log.info("업데이트 서비스 새로등록하는 파일 " + multipartFile.getOriginalFilename());
-
-                        boardImgService.boardImgregister(boardDTO.getBno(), multipartFile);
-                    }
-
-                }
-
-
-            }
-//
-//            if(delino !=null && !delino[0].equals("") ){
-//                log.info("업데이트포스 " + Arrays.toString(delino));
-//
-//                //사진삭제
-//                for (Long ino  : delino){
-//                    boardImgService.del(ino);
-//                }
-//            }
-
-
-
 
     }
 

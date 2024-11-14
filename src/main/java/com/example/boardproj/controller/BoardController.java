@@ -47,10 +47,10 @@ public class BoardController {
     }
     //글을 디비에 등록하는 포스트
     @PostMapping("register")
-    public String registerPost(@Valid BoardDTO boardDTO, BindingResult bindingResult, MultipartFile[] multipartFile){
+    public String registerPost(@Valid BoardDTO boardDTO, BindingResult bindingResult, MultipartFile multipartFile){
 
         log.info("컨트롤러로 들어온값 : " + boardDTO);
-//        log.info("컨트롤러로 들어온값 : " + multipartFile.getOriginalFilename());
+        log.info("컨트롤러로 들어온값 : " + multipartFile.getOriginalFilename());
 
         if (bindingResult.hasErrors()) {
             log.info("유효성 검삭나 문제가 있다 아래 로그는 모든 문제를 출력해준다.");
@@ -164,7 +164,7 @@ public class BoardController {
 
 
     @PostMapping("/update")
-    public String updatePost(@Valid BoardDTO boardDTO, BindingResult bindingResult, MultipartFile[] multipartFile,
+    public String updatePost(@Valid BoardDTO boardDTO, BindingResult bindingResult, MultipartFile multipartFile,
                              Long[] delino, PageRequestDTO pageRequestDTO, Model model){
 
         log.info("업데이트포스 " + boardDTO);
@@ -181,8 +181,22 @@ public class BoardController {
         }
 
         try {
-            boardService.update(boardDTO , multipartFile , delino);
+            boardService.update(boardDTO);
+            if(multipartFile != null && !multipartFile.getOriginalFilename().equals("")){
+                log.info(" 여기 사진이 있어요");
+                log.info("업데이트포스 " + multipartFile.getOriginalFilename());
 
+                boardImgService.boardImgregister(boardDTO.getBno(), multipartFile);
+            }
+
+            if(delino !=null && !delino[0].equals("") ){
+                log.info("업데이트포스 " + Arrays.toString(delino));
+
+                //사진삭제
+                for (Long ino  : delino){
+                    boardImgService.del(ino);
+                }
+            }
 
         }catch (EntityNotFoundException e){
             //model.addAttribute("msg", "현재 수정하려는 글번호가 옳바르지 않습니다.");
