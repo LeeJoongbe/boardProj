@@ -37,6 +37,8 @@ public class BoardImgService {
 
     public void boardImgregister(Long bno, MultipartFile multipartFile){
         // 원래 이름 가져오기 // e
+        log.info("boardimgservice 들어온값: "+bno);
+        log.info("boardimgservice 들어온값: "+multipartFile);
         String originalFilename =
         multipartFile.getOriginalFilename();
         //파일명에 담긴 경로 삭제
@@ -64,6 +66,7 @@ public class BoardImgService {
         boardImg.setNewImgName(newImgName);   //새로운이름
         boardImg.setImgName(imgName);      //사진 이름
         //db저장
+        log.info("저장전 들어가는 값 확인 boardImg :  " + boardImg);
         boardImgRepository.save(boardImg);
 
         //물리적인 파일저장
